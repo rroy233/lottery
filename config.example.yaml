@@ -1,0 +1,22 @@
+genenral:
+  production: false
+  base_url: "http://localhost:9092"
+  listen_port: "9092"
+  act_recache_time: 60
+  giftlist_recache_time: 10
+  gift_sync_time: 3
+
+db:
+  server: "127.0.0.1"
+  port: "3306"
+  username: "root"
+  password: "password"
+  db: "database"
+  redis_addr: "localhost:6379"
+  redis_pwd: ""
+  redis_db: 0
+
+sso:
+  service_name: "抽奖系统"
+  client_id: ""
+  client_secret: ""
