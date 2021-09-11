@@ -5,7 +5,7 @@
 
 ***
 
-![展示图](document/img/admin_dashboard.png)
+![展示图](document/img/preview.png)
 
 ***
 
@@ -33,7 +33,7 @@
 
 # 使用
 
-## 克隆仓库
+### 下载
 
 ```Bash
 git clone https://github.com/rroy233/lottery.git
@@ -43,18 +43,18 @@ mv lottery-FrontEnd template
 cp config.example.yaml config.yaml
 ```
 
-## mysql导入
+### mysql导入
 将`\sql\mysql_all.sql`导入数据库
 
-## 修改配置文件
+### 修改配置文件
 
 修改`config.yaml`
 设置数据库信息
 
-## 运行
+### 运行
 `go build && ./lottery2`
 
-## 访问
+### 访问
 默认地址: `http://localhost:9092`
 
 # demo
@@ -62,6 +62,7 @@ cp config.example.yaml config.yaml
 [在线演示地址](https://cj.roy233.com/admin)
 
 用户名:`cjadmin`
+
 密码:`cjadmin`
 
 
@@ -69,6 +70,7 @@ cp config.example.yaml config.yaml
 # 申请试用
 
 本系统还将长期处于试验阶段
+
 管理员账号注册需要注册码，不嫌弃的话可以找QQ:2867984618免费索要
 
 # License
