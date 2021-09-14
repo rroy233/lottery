@@ -618,6 +618,11 @@ func adminDelUser(w http.ResponseWriter,r *http.Request){
 		return
 	}
 
+	//吊销当前用户的登录令牌
+	if rdb.Exists(ctx,"Lottery_2:Login_Status_"+auth.GetUID()+":USER_"+id).Val() == 1{
+		rdb.Del(ctx,"Lottery_2:Login_Status_"+auth.GetUID()+":USER_"+id)
+	}
+
 	//处理查内定
 	result,err = db.Exec("UPDATE `gift` SET `promise` = `promise` - 1 WHERE `id` = ? and `admin_by`=?;",giftPromise,auth.Userid)
 	if err != nil {
@@ -655,6 +660,14 @@ func adminBulkDelUser(w http.ResponseWriter,r *http.Request){
 		return
 	}
 	Logger.Info.Println("[管理员]UID:",auth.Userid,"。执行批量删除操作！")
+
+	//吊销所有用户的登录凭证
+	userLSKeys := make([]string,0)
+	rdb.Keys(ctx,"Lottery_2:Login_Status_"+auth.GetUID()+":*").ScanSlice(&userLSKeys)
+	for i := range userLSKeys{
+		rdb.Del(ctx,userLSKeys[i])
+		Logger.Info.Println("[管理员]已吊销登录凭证:",userLSKeys[i])
+	}
 
 	//重置内定信息
 	_,err = db.Exec("UPDATE `gift` SET `promise` = 0 WHERE `admin_by` =?",auth.Userid)

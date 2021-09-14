@@ -92,9 +92,12 @@ func LoginController(w http.ResponseWriter,r *http.Request){
 
 	auth := AuthStruct{}
 	auth.Uid = user.Id
-	auth.Exp_time = time.Now().Add(3*time.Hour).Unix()
+	auth.Exp_time = time.Now().Add(1*time.Hour).Unix()
 	auth.AdminID = user.AdminBy
 	auth.Token = MD5_short(strconv.Itoa(auth.Uid)+strconv.FormatInt(auth.Exp_time,10)+strconv.Itoa(auth.AdminID)+"ROYYYY")
+
+	//存储用户有效登录状态到redis，同时限制设备数
+	rdb.Set(ctx,"Lottery_2:Login_Status_"+strconv.Itoa(user.AdminBy)+":USER_"+strconv.Itoa(auth.Uid),auth.Token,1*time.Hour)
 
 	tmp,_ := Res.New(0).Json(auth)
 	httpReturn(&w,tmp.String())
@@ -156,9 +159,12 @@ func RegController(w http.ResponseWriter,r *http.Request){
 	uid,_ := result.LastInsertId()
 	auth := AuthStruct{}
 	auth.Uid = int(uid)
-	auth.Exp_time = time.Now().Add(3*time.Hour).Unix()
+	auth.Exp_time = time.Now().Add(1*time.Hour).Unix()
 	auth.AdminID,_ = strconv.Atoi(adminID)
 	auth.Token = MD5_short(strconv.Itoa(auth.Uid)+strconv.FormatInt(auth.Exp_time,10)+strconv.Itoa(auth.AdminID)+"ROYYYY")
+
+	//存储用户有效登录状态到redis，同时限制设备数
+	rdb.Set(ctx,"Lottery_2:Login_Status_"+adminID+":USER_"+strconv.Itoa(auth.Uid),auth.Token,1*time.Hour)
 
 	tmp,_ := Res.New(0).Json(auth)
 	httpReturn(&w,tmp.String())

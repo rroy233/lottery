@@ -36,18 +36,21 @@ type giftInfoUser struct {
 	Total int
 }
 
-func checkAuth(auth string) bool {
+func checkAuth(auth string) (bool,error) {
 	tmp := new(AuthStruct)
 	err := jjson.Unmarshal([]byte(auth),tmp)
 	if err != nil {
 		Logger.Error.Println("[验证服务]auth反序列化失败:",err.Error())
-		return false
+		return false,errors.New("登录状态验证失败(-1)")
 	}
 	if tmp.Token == MD5_short(strconv.Itoa(tmp.Uid)+strconv.FormatInt(tmp.Exp_time,10)+strconv.Itoa(tmp.AdminID)+"ROYYYY"){
-		return true
-	}else{
-		return false
+		if rdb.Get(ctx,"Lottery_2:Login_Status_"+strconv.Itoa(tmp.AdminID)+":USER_"+strconv.Itoa(tmp.Uid)).Val() == tmp.Token {
+			//判断当前登录状态是否有效+防止多设备
+			return true,nil
+		}
+		return false,errors.New("当前设备登录状态已失效")
 	}
+	return false,errors.New("登录状态验证失败(-2)")
 }
 
 func verifyAuth(r *http.Request)(a AuthStruct,err error){
@@ -77,7 +80,8 @@ func verifyAuth(r *http.Request)(a AuthStruct,err error){
 			err = errors.New("验证失败(-2)")
 			return
 		}
-		if checkAuth(auth) {
+		ok := false
+		if ok,err = checkAuth(auth);ok {
 			if a.Exp_time < time.Now().Unix() {
 				Logger.Info.Println("[验证服务][失败]UID:"+strconv.Itoa(a.Uid)+",凭证过期:", auth)
 				err = errors.New("凭证过期")
@@ -85,7 +89,7 @@ func verifyAuth(r *http.Request)(a AuthStruct,err error){
 			}
 		}else{
 			Logger.Error.Println("[验证服务][失败]IP:"+ip+",Key校验失败:", auth)
-			err = errors.New("验证失败(-3)")
+			err = errors.New("登录凭证无效"+err.Error())
 			return
 		}
 	}
