@@ -1,7 +1,10 @@
-# 抽奖系统 :gift:
-一个主要由Go语言编写的抽奖系统，使用了Redis+Mysql，用户端页面适配移动端
+# 现场抽奖系统 :gift:
+一个由Go语言编写的抽奖系统
 
-许多设计还存在不合理的地方，仅作为自己入门阶段的一个小作业
+适用场景:
+
+* 聚会
+* 线下活动
 
 ***
 
@@ -13,6 +16,7 @@
 
 - [功能特性](#功能特性)
 - [环境依赖](#环境依赖)
+- [安装](#安装)
 - [使用](#使用)
 - [demo](#demo)
 - [申请试用](#申请试用)
@@ -25,15 +29,14 @@
 - [x] :ghost:支持设置“内鬼”，保证指定用户获得指定奖项
 - [x] :chart_with_upwards_trend:支持导出中奖记录
 - [x] :alarm_clock:支持抽奖活动定时开启/关闭
-- [ ] 管理员端页面适配移动端
 
 # 环境依赖
 
 `Go 1.16` + `Mysql` + `Redis`
 
-# 使用
+# 安装
 
-### 下载
+### 下载前端+后端
 
 ```Bash
 git clone https://github.com/rroy233/lottery.git
@@ -54,7 +57,7 @@ cp config.example.yaml config.yaml
 ### 运行
 `go build && ./lottery2`
 
-### 访问
+# 使用
 默认地址: `http://localhost:9092`
 
 # demo
@@ -64,7 +67,6 @@ cp config.example.yaml config.yaml
 用户名:`cjadmin`
 
 密码:`cjadmin`
-
 
 
 # 申请试用
