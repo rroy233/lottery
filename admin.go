@@ -474,6 +474,11 @@ func adminBulkAddUser(w http.ResponseWriter,r *http.Request){
 		httpReturnErrJson(&w,"验证失败")
 		return
 	}
+	if auth.UserGroup == "6"{
+		Logger.Info.Println("[验证服务][管理员]展示版本限制：",r)
+		httpReturnErrJson(&w,"demo用户无法使用此功能")
+		return
+	}
 
 	r.ParseMultipartForm(32 << 20)//32MB
 	file, handler, err := r.FormFile("file")
